@@ -1,0 +1,25 @@
+[package]
+name = "rustfft"
+version = "0.1.0"
+edition = "2021"
+description = "Rustfft for wasm, published to wapm"
+repository = "https://github.com/wasmerio/rustfft"
+license = "MIT OR Apache-2.0"
+authors = ["Rudra Arora <rudra@wasmer.io>"]
+readme = "README.md"
+rust-version = "1.65.0"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[package.metadata.wapm]
+namespace = "dynamite-bud"
+abi = "none"
+bindings = { wai-version = "0.2.0", exports = "rustfft.wai" }
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+wai-bindgen-rust = "0.2.2"
+original = { version = "6.1.0", package = "rustfft" }
+num-complex = "0.4.0"

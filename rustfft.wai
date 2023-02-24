@@ -1,0 +1,70 @@
+enum fft-direction {
+    forward,
+    inverse
+}
+
+resource complex {
+    static new-f64: func(re: float64, im: float64) -> complex
+    i: func() -> complex
+}
+
+resource inner-fft {
+    process-with-scratch: func(buffer: list<complex>, scratch: list<complex>)
+    process-outofplace-with-scratch: func(input: list<complex>, output: list<complex>, scratch: list<complex>)
+    get-inplace-scratch-len: func() -> u32
+    get-outofplace-scratch-len: func() -> u32
+    process: func(buffer: list<complex>)
+}
+
+resource fft-planner {
+    static new-fft-planner: func() -> fft-planner
+
+    plan-fft: func(len: u32, direction: fft-direction) -> inner-fft
+    plan-fft-forward: func(len: u32) -> inner-fft
+    plan-fft-inverse: func(len: u32) -> inner-fft
+}
+
+
+resource algorithm {
+    static new-bluesteins-algorithm: func(len: u32, inner-fft: inner-fft) -> algorithm
+    static new-dft: func(len: u32, direction: fft-direction) -> algorithm
+    static new-good-thomas-algorithm: func(width-fft: inner-fft, height-fft: inner-fft) -> algorithm
+    static new-good-thomas-algorithm-small: func(width-fft: inner-fft, height-fft: inner-fft) -> algorithm
+    static new-mixed-radix: func(width-fft: inner-fft, height-fft: inner-fft) -> algorithm
+    static new-mixed-radix-small: func(width-fft: inner-fft, height-fft: inner-fft) -> algorithm
+    static new-raders-algorithm: func(inner-fft: inner-fft) -> algorithm
+    static new-radix3: func(len: u32, direction: fft-direction) -> algorithm
+    static new-radix4: func(len: u32, direction: fft-direction) -> algorithm
+
+    // butterfly algorithms
+    static new-butterfly1: func(direction: fft-direction) -> algorithm
+    static new-butterfly2: func(direction: fft-direction) -> algorithm
+    static new-butterfly3: func(direction: fft-direction) -> algorithm
+    static new-butterfly4: func(direction: fft-direction) -> algorithm
+    static new-butterfly5: func(direction: fft-direction) -> algorithm
+    static new-butterfly6: func(direction: fft-direction) -> algorithm
+    static new-butterfly7: func(direction: fft-direction) -> algorithm
+    static new-butterfly8: func(direction: fft-direction) -> algorithm
+    static new-butterfly9: func(direction: fft-direction) -> algorithm
+    static new-butterfly11: func(direction: fft-direction) -> algorithm
+    static new-butterfly13: func(direction: fft-direction) -> algorithm
+    static new-butterfly16: func(direction: fft-direction) -> algorithm
+    static new-butterfly17: func(direction: fft-direction) -> algorithm
+    static new-butterfly19: func(direction: fft-direction) -> algorithm
+    static new-butterfly23: func(direction: fft-direction) -> algorithm
+    static new-butterfly27: func(direction: fft-direction) -> algorithm
+    static new-butterfly29: func(direction: fft-direction) -> algorithm
+    static new-butterfly31: func(direction: fft-direction) -> algorithm
+    static new-butterfly32: func(direction: fft-direction) -> algorithm
+
+    len: func() -> u32
+
+    fft-direction: func() -> fft-direction
+
+    process-with-scratch: func(buffer: list<complex>, scratch: list<complex>)
+    process-outofplace-with-scratch: func(input: list<complex>, output: list<complex>, scratch: list<complex>)
+    get-inplace-scratch-len: func() -> u32
+    get-outofplace-scratch-len: func() -> u32
+    process: func(buffer: list<complex>)
+}
+
