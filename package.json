@@ -1,0 +1,14 @@
+{
+  "name": "rustfft",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/wasmerio/rustfft.git",
+  "author": "Rudra <aroraru@tcd.ie>",
+  "license": "MIT",
+  "dependencies": {
+    "@dynamite-bud/rustfft": "./generated_bindings/JavaScript/package"
+  },
+  "devDependencies": {
+    "jest": "^29.4.1"
+  }
+}
