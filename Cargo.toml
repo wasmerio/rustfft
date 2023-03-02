@@ -23,3 +23,15 @@ crate-type = ["cdylib", "rlib"]
 wai-bindgen-rust = "0.2.2"
 original = { version = "6.1.0", package = "rustfft" }
 num-complex = "0.4.0"
+
+[dev-dependencies]
+anyhow = "1.0.68"
+tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
+wasmer-pack-testing = "0.7.0"
+
+[[test]]
+name = "rustfft-integration-tests"
+harness = false
+
+[patch.crates-io]
+wasmer-pack-testing = { git = "https://github.com/wasmerio/wasmer-pack", branch = "testing-fixes" }
