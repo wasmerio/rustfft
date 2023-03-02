@@ -2072,6 +2072,22 @@ dependencies = [
 
 [[package]]
 name = "wapm-toml"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bde48580008d83994e59db51dc23d200d91c06d6b82f59a955717d589dac29b5"
+dependencies = [
+ "anyhow",
+ "semver",
+ "serde",
+ "serde_cbor",
+ "serde_json",
+ "serde_yaml 0.9.17",
+ "thiserror",
+ "toml",
+]
+
+[[package]]
+name = "wapm-toml"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "994ef26447f3158955d2e3fca96021d1f1c47b830e2053569177673dca1447a9"
@@ -2173,9 +2189,9 @@ dependencies = [
 
 [[package]]
 name = "wasmer-pack"
-version = "0.7.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3b79dcf9dc6c1cad17ae57ca18ae8700602fccbaa532fb7730b9fedf0cfcbe4"
+checksum = "252044ff215a7b3a7f6dc572dad66361656225359908ffd3b3b63902896aeb80"
 dependencies = [
  "anyhow",
  "heck 0.4.1",
@@ -2188,31 +2204,29 @@ dependencies = [
  "wai-bindgen-gen-js",
  "wai-bindgen-gen-wasmer-py",
  "wai-parser",
- "wasmparser",
- "webc 4.1.1",
 ]
 
 [[package]]
 name = "wasmer-pack-cli"
-version = "0.7.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2a8bb4f4f6ad75755884e2167fffb76aed6481ef3ae2829cc85907bb34492e80"
+checksum = "d6d15df4ddec9af96729058d42beb8be6ec5e317a47bf5dafe06f3e81fecba1b"
 dependencies = [
  "anyhow",
  "clap",
  "serde",
  "serde_json",
  "wapm-targz-to-pirita",
- "wapm-toml 0.4.0",
+ "wapm-toml 0.3.3",
  "wasmer-pack",
  "webc 4.1.1",
 ]
 
 [[package]]
 name = "wasmer-pack-testing"
-version = "0.7.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "27bfa9f3106e4d17dfceeb25d2d26ac6920d9037c364b918434e262220fa87eb"
+checksum = "fb63c9459052ff7f78512d34d776c502823673f918c6d7722269e0e5c73fbd6e"
 dependencies = [
  "anyhow",
  "ignore",
@@ -2255,16 +2269,6 @@ dependencies = [
  "wapm-toml 0.2.2",
  "webc 3.0.1",
  "whoami",
-]
-
-[[package]]
-name = "wasmparser"
-version = "0.99.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9ef3b717afc67f848f412d4f02c127dd3e35a0eecd58c684580414df4fde01d3"
-dependencies = [
- "indexmap",
- "url",
 ]
 
 [[package]]
