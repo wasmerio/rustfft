@@ -3,7 +3,7 @@ use wai_bindgen_rust::Handle;
 
 wai_bindgen_rust::export!("rustfft.wai");
 
-use rustfft::Complex;
+use crate::rustfft::Complex;
 
 struct Rustfft {}
 impl rustfft::Rustfft for Rustfft {}
