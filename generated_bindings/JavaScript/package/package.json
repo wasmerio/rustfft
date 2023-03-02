@@ -1,8 +1,0 @@
-{
-  "dependencies": {},
-  "main": "src/index.js",
-  "name": "@dynamite-bud/rustfft",
-  "type": "commonjs",
-  "types": "src/index.d.ts",
-  "version": "0.1.0"
-}
