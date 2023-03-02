@@ -57,6 +57,6 @@ resource algorithm {
 
     fft-direction: func() -> fft-direction
 
-    process: func(buffer: list<complex>)
+    compute: func(signal: list<complex>) -> list<complex>
 }
 

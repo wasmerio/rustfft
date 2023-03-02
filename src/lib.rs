@@ -15,6 +15,13 @@ impl From<Complex> for original::num_complex::Complex64 {
     }
 }
 
+impl From<original::num_complex::Complex64> for Complex {
+    fn from(complex: original::num_complex::Complex64) -> Self {
+        let original::num_complex::Complex64 { re, im } = complex;
+        Self { re, im }
+    }
+}
+
 pub struct InnerFft(Arc<dyn original::Fft<f64>>);
 
 impl InnerFft {
@@ -88,7 +95,7 @@ impl rustfft::FftPlanner for FftPlanner {
 pub trait Algo {
     fn algo_len(&self) -> u32;
     fn algo_fft_direction(&self) -> rustfft::FftDirection;
-    fn algo_process(&self, buffer: Vec<Complex>);
+    fn algo_compute(&self, buffer: Vec<Complex>) -> Vec<Complex>;
 }
 
 impl<T> Algo for T
@@ -103,12 +110,18 @@ where
         self.fft_direction().into()
     }
 
-    fn algo_process(&self, buffer: Vec<Complex>) {
+    fn algo_compute(&self, buffer: Vec<Complex>) -> Vec<Complex> {
         let mut buffer_vec = buffer
             .iter()
             .map(|complex| original::num_complex::Complex64::from(*complex))
             .collect::<Vec<original::num_complex::Complex64>>();
-        self.process(&mut buffer_vec)
+
+        self.process(&mut buffer_vec);
+
+        buffer_vec
+            .iter()
+            .map(|complex| Complex::from(*complex))
+            .collect::<Vec<Complex>>()
     }
 }
 
@@ -150,9 +163,9 @@ impl rustfft::Algorithm for Algorithm {
     }
 
     fn new_good_thomas_algorithm_small(
-        width_fft: wai_bindgen_rust::Handle<InnerFft>,
-        height_fft: wai_bindgen_rust::Handle<InnerFft>,
-    ) -> wai_bindgen_rust::Handle<Algorithm> {
+        width_fft: Handle<InnerFft>,
+        height_fft: Handle<InnerFft>,
+    ) -> Handle<Algorithm> {
         let width_fft = &width_fft.0;
         let height_fft = &height_fft.0;
         Handle::new(Algorithm::new(
@@ -164,9 +177,9 @@ impl rustfft::Algorithm for Algorithm {
     }
 
     fn new_mixed_radix(
-        width_fft: wai_bindgen_rust::Handle<InnerFft>,
-        height_fft: wai_bindgen_rust::Handle<InnerFft>,
-    ) -> wai_bindgen_rust::Handle<Algorithm> {
+        width_fft: Handle<InnerFft>,
+        height_fft: Handle<InnerFft>,
+    ) -> Handle<Algorithm> {
         let width_fft = &width_fft.0;
         let height_fft = &height_fft.0;
         Handle::new(Algorithm::new(original::algorithm::MixedRadix::new(
@@ -176,9 +189,9 @@ impl rustfft::Algorithm for Algorithm {
     }
 
     fn new_mixed_radix_small(
-        width_fft: wai_bindgen_rust::Handle<InnerFft>,
-        height_fft: wai_bindgen_rust::Handle<InnerFft>,
-    ) -> wai_bindgen_rust::Handle<Algorithm> {
+        width_fft: Handle<InnerFft>,
+        height_fft: Handle<InnerFft>,
+    ) -> Handle<Algorithm> {
         let width_fft = &width_fft.0;
         let height_fft = &height_fft.0;
         Handle::new(Algorithm::new(original::algorithm::MixedRadixSmall::new(
@@ -187,29 +200,21 @@ impl rustfft::Algorithm for Algorithm {
         )))
     }
 
-    fn new_raders_algorithm(
-        inner_fft: wai_bindgen_rust::Handle<InnerFft>,
-    ) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_raders_algorithm(inner_fft: Handle<InnerFft>) -> Handle<Algorithm> {
         let inner_fft = &inner_fft.0;
         Handle::new(Algorithm::new(original::algorithm::RadersAlgorithm::new(
             inner_fft.to_owned(),
         )))
     }
 
-    fn new_radix3(
-        len: u32,
-        direction: rustfft::FftDirection,
-    ) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_radix3(len: u32, direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(original::algorithm::Radix3::new(
             len as usize,
             direction.into(),
         )))
     }
 
-    fn new_radix4(
-        len: u32,
-        direction: rustfft::FftDirection,
-    ) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_radix4(len: u32, direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(original::algorithm::Radix4::new(
             len as usize,
             direction.into(),
@@ -228,103 +233,103 @@ impl rustfft::Algorithm for Algorithm {
         ))
     }
 
-    fn new_butterfly3(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly3(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly3::new(direction.into()),
         ))
     }
 
-    fn new_butterfly4(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly4(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly4::new(direction.into()),
         ))
     }
 
-    fn new_butterfly5(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly5(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly5::new(direction.into()),
         ))
     }
 
-    fn new_butterfly6(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly6(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly6::new(direction.into()),
         ))
     }
 
-    fn new_butterfly7(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly7(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly7::new(direction.into()),
         ))
     }
 
-    fn new_butterfly8(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly8(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly8::new(direction.into()),
         ))
     }
 
-    fn new_butterfly9(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly9(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly9::new(direction.into()),
         ))
     }
 
-    fn new_butterfly11(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly11(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly11::new(direction.into()),
         ))
     }
 
-    fn new_butterfly13(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly13(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly13::new(direction.into()),
         ))
     }
 
-    fn new_butterfly16(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly16(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly16::new(direction.into()),
         ))
     }
 
-    fn new_butterfly17(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly17(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly17::new(direction.into()),
         ))
     }
 
-    fn new_butterfly19(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly19(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly19::new(direction.into()),
         ))
     }
 
-    fn new_butterfly23(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly23(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly23::new(direction.into()),
         ))
     }
 
-    fn new_butterfly27(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly27(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly27::new(direction.into()),
         ))
     }
 
-    fn new_butterfly29(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly29(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly29::new(direction.into()),
         ))
     }
 
-    fn new_butterfly31(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly31(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly31::new(direction.into()),
         ))
     }
 
-    fn new_butterfly32(direction: rustfft::FftDirection) -> wai_bindgen_rust::Handle<Algorithm> {
+    fn new_butterfly32(direction: rustfft::FftDirection) -> Handle<Algorithm> {
         Handle::new(Algorithm::new(
             original::algorithm::butterflies::Butterfly32::new(direction.into()),
         ))
@@ -340,8 +345,8 @@ impl rustfft::Algorithm for Algorithm {
         algo.algo_fft_direction()
     }
 
-    fn process(&self, buffer: Vec<rustfft::Complex>) {
+    fn compute(&self, signal: Vec<Complex>) -> Vec<Complex> {
         let algo = self.0.lock().expect("Mutex was Poisioned");
-        algo.algo_process(buffer)
+        algo.algo_compute(signal)
     }
 }
